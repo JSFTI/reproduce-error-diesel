@@ -41,8 +41,8 @@ fn main(){
         schema::categories as category_parent,
     );
 
-    let data : (Category, Category, (User, Company)) = category_child
-        .inner_join(category_parent.on(
+    let data : (Category, Option<Category>, (User, Company)) = category_child
+        .left_join(category_parent.on(
             category_child.field(schema::categories::parent_id).eq(category_parent.field(schema::categories::id).nullable())
         ))
         // Error
@@ -59,9 +59,10 @@ fn main(){
                 schema::categories::user_id,
                 schema::categories::name,
                 schema::categories::parent_id,
-            )),
+            )).nullable(),
             (User::as_select(), Company::as_select())
         ))
+        .filter(category_child.field(schema::categories::id).eq(1))
         .first(&mut conn).unwrap();
 
     // Alternative solution: https://github.com/diesel-rs/diesel/discussions/3785#discussioncomment-6981859
