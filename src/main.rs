@@ -62,7 +62,6 @@ fn main(){
             )).nullable(),
             (User::as_select(), Company::as_select())
         ))
-        .filter(category_child.field(schema::categories::id).eq(1))
         .first(&mut conn).unwrap();
 
     // Alternative solution: https://github.com/diesel-rs/diesel/discussions/3785#discussioncomment-6981859
